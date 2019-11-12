@@ -7,6 +7,9 @@ const app = express();
 morgan = require("morgan");
 app.use(morgan("common"));
 
+// Serve static file(s) in public folder
+app.use(express.static('public'));
+
 let myMovies = [
   {
     id: 1,
@@ -29,6 +32,13 @@ let myMovies = [
     Duration: "1 hour",
     Genre: "Spiritual",
     Description: "God is not dead"
+  },
+  {
+    id: 4,
+    Title: "Security",
+    Duration: "1 hour",
+    Genre: "Action",
+    Description: "Dangerous"
   }
 ];
 
@@ -55,10 +65,11 @@ app.get("/", function(req, res) {
 });
 
 // get a particular movie
-app.get("/movies/:id", (req, res) => {
+app.get("/movies/:Title", (req, res) => {
   res.json(
-    myMovies.find(movie => {
-      return movie.id === req.params.id;
+    myMovies.find(function(movie) {
+      console.log(movie);
+      return movie.Title === req.params.Title;
     })
   );
 });
@@ -82,15 +93,15 @@ app.post("/movies", (req, res) => {
 });
 
 // delete a movie
-app.delete("/movies/:id", (req, res) => {
+app.delete("/movies/:Title", (req, res) => {
   let movie = myMovies.find(movie => {
-    return movie.id === req.params.id;
+    return movie.Title === req.params.Title;
   });
   if (movie) {
     myMovies.filter(function(obj) {
-      return obj.id !== req.params.id;
+      return obj.Title !== req.params.Title;
     });
-    res.status(201).send("Movie " + req.params.id + " was deleted.");
+    res.status(201).send("Movie " + req.params.Title + " was deleted.");
   }
 });
 
